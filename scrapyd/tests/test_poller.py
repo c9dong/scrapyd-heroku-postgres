@@ -5,9 +5,9 @@ from twisted.internet.defer import Deferred
 
 from zope.interface.verify import verifyObject
 
-from scrapyd.interfaces import IPoller
+from scrapyd.pollers.poller import IPoller
 from scrapyd.config import Config
-from scrapyd.poller import QueuePoller
+from scrapyd.pollers.poller import QueuePoller
 from scrapyd.utils import get_spider_queues
 
 class QueuePollerTest(unittest.TestCase):

@@ -4,9 +4,9 @@ from twisted.trial import unittest
 
 from zope.interface.verify import verifyObject
 
-from scrapyd.interfaces import IEnvironment
+from scrapyd.environments.environment import IEnvironment
 from scrapyd.config import Config
-from scrapyd.environ import Environment
+from scrapyd.environments.environment import Environment
 
 class EnvironmentTest(unittest.TestCase):
 

@@ -7,3 +7,9 @@ docs/_build
 venv
 dist
 build
+bin/
+lib/
+.Python
+include/
+.DS_Store
+pip-selfcheck.json

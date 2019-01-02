@@ -1,3 +1,5 @@
+from os import environ
+
 from twisted.application.service import Application
 from twisted.application.internet import TimerService, TCPServer
 from twisted.web import server
@@ -5,11 +7,15 @@ from twisted.python import log
 
 from scrapy.utils.misc import load_object
 
-from .interfaces import IEggStorage, IPoller, ISpiderScheduler, IEnvironment
-from .eggstorage import FilesystemEggStorage
-from .scheduler import SpiderScheduler
-from .poller import QueuePoller
-from .environ import Environment
+from .eggstorages.eggstorage import IEggStorage
+from .eggstorages.eggstorage import FilesystemEggStorage
+from .environments.environment import IEnvironment
+from .environments.environment import Environment
+from .pollers.poller import IPoller
+from .pollers.poller import QueuePoller
+from .schedulers.scheduler import ISpiderScheduler
+from .schedulers.scheduler import SpiderScheduler
+
 from .config import Config
 
 def application(config):
@@ -17,6 +23,7 @@ def application(config):
     http_port = config.getint('http_port', 6800)
     bind_address = config.get('bind_address', '127.0.0.1')
     poll_interval = config.getfloat('poll_interval', 5)
+    database = environ.get('DATABASE_URL')
 
     poller = QueuePoller(config)
     eggstorage = FilesystemEggStorage(config)

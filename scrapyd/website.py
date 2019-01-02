@@ -7,7 +7,10 @@ from twisted.application.service import IServiceCollection
 
 from scrapy.utils.misc import load_object
 
-from .interfaces import IPoller, IEggStorage, ISpiderScheduler
+from .eggstorages.eggstorage import IEggStorage
+from .environments.environment import IEnvironment
+from .pollers.poller import IPoller
+from .schedulers.scheduler import ISpiderScheduler
 
 from six.moves.urllib.parse import urlparse
 
@@ -28,11 +31,12 @@ class Root(resource.Resource):
             self.putChild(b'logs', static.File(logsdir.encode('ascii', 'ignore'), 'text/plain'))
         if local_items:
             self.putChild(b'items', static.File(itemsdir, 'text/plain'))
-        self.putChild(b'jobs', Jobs(self, local_items))
+        self.putChild(b'schedule_jobs', Jobs(self, local_items))
         services = config.items('services', ())
         for servName, servClsName in services:
           servCls = load_object(servClsName)
           self.putChild(servName.encode('utf-8'), servCls(self))
+
         self.update_projects()
 
     def update_projects(self):

@@ -7,9 +7,9 @@ from twisted.trial import unittest
 
 from zope.interface.verify import verifyObject
 
-from scrapyd.interfaces import IEggStorage
+from scrapyd.eggstorages.eggstorage import IEggStorage
 from scrapyd.config import Config
-from scrapyd.eggstorage import FilesystemEggStorage
+from scrapyd.eggstorages.eggstorage import FilesystemEggStorage
 
 class EggStorageTest(unittest.TestCase):
 

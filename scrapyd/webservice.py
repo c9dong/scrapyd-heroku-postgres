@@ -2,9 +2,9 @@ from copy import copy
 import traceback
 import uuid
 try:
-    from cStringIO import StringIO as BytesIO
+  from cStringIO import StringIO as BytesIO
 except ImportError:
-    from io import BytesIO
+  from io import BytesIO
 
 from twisted.python import log
 
@@ -12,9 +12,9 @@ from .utils import get_spider_list, JsonResource, UtilsCache, native_stringify_d
 
 class WsResource(JsonResource):
 
-    def __init__(self, root):
-        JsonResource.__init__(self)
-        self.root = root
+  def __init__(self, root):
+    JsonResource.__init__(self)
+    self.root = root
 
     def render(self, txrequest):
         try:

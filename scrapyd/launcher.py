@@ -8,7 +8,9 @@ from twisted.python import log
 
 from scrapyd.utils import get_crawl_args, native_stringify_dict
 from scrapyd import __version__
-from .interfaces import IPoller, IEnvironment
+
+from .environments.environment import IEnvironment
+from .pollers.poller import IPoller
 
 class Launcher(Service):
 

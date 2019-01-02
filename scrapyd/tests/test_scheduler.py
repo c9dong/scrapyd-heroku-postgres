@@ -4,9 +4,9 @@ from twisted.trial import unittest
 
 from zope.interface.verify import verifyObject
 
-from scrapyd.interfaces import ISpiderScheduler
+from scrapyd.schedulers.scheduler import ISpiderScheduler
 from scrapyd.config import Config
-from scrapyd.scheduler import SpiderScheduler
+from scrapyd.schedulers.scheduler import SpiderScheduler
 from scrapyd.utils import get_spider_queues
 
 class SpiderSchedulerTest(unittest.TestCase):
