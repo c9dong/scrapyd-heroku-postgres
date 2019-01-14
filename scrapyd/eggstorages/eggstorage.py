@@ -33,13 +33,13 @@ class FilesystemEggStorage(object):
   def __init__(self, config):
     self.basedir = config.get('eggs_dir', 'eggs')
 
-  def put(self, eggfile, project, version):
+  def put(self, egg_data, project, version):
     eggpath = self._eggpath(project, version)
     eggdir = path.dirname(eggpath)
     if not path.exists(eggdir):
       makedirs(eggdir)
     with open(eggpath, 'wb') as f:
-      copyfileobj(eggfile, f)
+      f.write(egg_data)
 
   def get(self, project, version=None):
     if version is None:

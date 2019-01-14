@@ -1,8 +1,8 @@
 class Project:
-  def __init__(self, name, version, egg, created_at=None):
+  def __init__(self, name, version=None, egg_data=None, created_at=None):
     self._name = name
     self._version = version
-    self._egg = egg
+    self._egg_data = egg_data
     self._created_at = created_at
 
   @property
@@ -14,8 +14,8 @@ class Project:
     return self._version
 
   @property
-  def egg(self):
-    return self._egg
+  def egg_data(self):
+    return self._egg_data
 
   @property
   def created_at(self):

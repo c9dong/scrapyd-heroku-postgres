@@ -13,11 +13,12 @@ class ProjectResource(WsResource):
   def render_POST(self, txrequest):
     name = txrequest.args[b'name'][0].decode('utf-8')
     version = txrequest.args[b'version'][0].decode('utf-8')
-    egg = txrequest.args[b'egg'][0]
 
-    project = Project(name, version, egg)
+    egg_data = txrequest.content.read()
 
-    return self._service.post(project)
+    project = Project(name, version, egg_data)
+
+    self._service.post(project)
 
   '''
   remove a project, or a specific version
@@ -25,10 +26,10 @@ class ProjectResource(WsResource):
   def render_DELETE(self, txrequest):
     name = txrequest.args[b'name'][0].decode('utf-8')
     version = None
-    if version in txrequest.args:
+    if b'version' in txrequest.args:
       version = txrequest.args[b'version'][0].decode('utf-8')
 
-    return self._service.delete(name, version)
+    self._service.delete(name, version)
 
   '''
   list a project, or a specific version of a project
@@ -36,8 +37,9 @@ class ProjectResource(WsResource):
   def render_GET(self, txrequest):
     name = txrequest.args[b'name'][0].decode('utf-8')
     version = None
-    if version in txrequest.args:
+    if b'version' in txrequest.args:
       version = txrequest.args[b'version'][0].decode('utf-8')
+      print version
     
     data = self._service.get(name, version)
     return map(lambda p : self.__to_json(p), data)
@@ -47,12 +49,11 @@ class ProjectResource(WsResource):
   '''
   def render_GETALL(self, txrequest):
     data = self._service.getall()
-    return map(lambda p : self.__to_json(p), data)  
+    return map(lambda p : self.__to_json(p), data)
 
   def __to_json(self, project):
     return {
       'name': project.name,
       'version': project.version,
-      'egg': project.egg,
       'createdAt': int(project.created_at.strftime("%s")) * 1000
     }
