@@ -4,7 +4,6 @@ from subprocess import Popen, PIPE
 import six
 
 from ..models.project import Project
-from ..eggstorages.eggstorage import FilesystemEggStorage
 from ..exceptions.httpexception import HttpException, HTTP_404_NOT_FOUND
 from ..utils import UtilsCache
 

@@ -2,16 +2,17 @@ import sys
 import os
 import shutil
 import tempfile
+import boto3
 from contextlib import contextmanager
 
 from scrapyd import get_application
-from scrapyd.eggstorages.eggstorage import FilesystemEggStorage
+from scrapyd.eggstorages.eggstorage import S3EggStorage
 from scrapyd.eggutils import activate_egg
 from scrapyd.config import Config
 
 def get_egg_storage():
     config = Config()
-    return FilesystemEggStorage(config)
+    return S3EggStorage(config, boto3.client('s3'))
 
 @contextmanager
 def project_environment(project):

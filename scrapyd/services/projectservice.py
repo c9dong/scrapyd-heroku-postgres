@@ -1,9 +1,10 @@
 import os
 from os import environ
+import boto3
 
 from ..db.pgdbadapter import PgDbAdapter
 from ..models.project import Project
-from ..eggstorages.eggstorage import FilesystemEggStorage
+from ..eggstorages.eggstorage import S3EggStorage
 from ..config import Config
 
 class ProjectService:
@@ -16,6 +17,7 @@ class ProjectService:
     q = "create table if not exists %s " \
       "(name text, " \
       " version text, " \
+      " path text, " \
       " createdAt timestamp without time zone default (now() at time zone 'utc'));" % self._table
     self._db.execute(q)
     self._db.commit()
@@ -24,13 +26,13 @@ class ProjectService:
     if len(self.__get(project.key)) > 0:
       return
 
-    q = "insert into %s (name, version) values (%%s,%%s)" % self._table
-    args = (project.name, project.version)
+    path = self._egg_storage.put(project.egg_data, project.name, project.version)
+
+    q = "insert into %s (name, version, path) values (%%s,%%s, %%s)" % self._table
+    args = (project.name, project.version, path)
 
     self._db.execute(q, args)
     self._db.commit()
-
-    self._egg_storage.put(project.egg_data, project.name, project.version)
 
   def delete(self, name, version=None):
     q = "delete from %s where name=%%s" % self._table
@@ -52,7 +54,7 @@ class ProjectService:
     return map(lambda r : self.__result_to_model(r), results)
 
   def getall(self):
-    q = "select a.name, a.version, a.createdAt from " \
+    q = "select a.name, a.version, a.path, a.createdAt from " \
       " ( select name, max(createdAt) as maxTime " \
           " from %s " \
           " group by name) gb " \
@@ -65,10 +67,10 @@ class ProjectService:
     return map(lambda r : self.__result_to_model(r), results)
 
   def __result_to_model(self, result):
-    return Project(result[0], result[1], '', result[2])
+    return Project(result[0], result[1], '', result[2], result[3])
 
   def __get(self, project_key):
-    q = "select name, version, createdAt from %s where name=%%s" % self._table
+    q = "select name, version, path, createdAt from %s where name=%%s" % self._table
     args = (project_key[0],)
     if project_key[1] is not None:
       q += " and version=%s"
@@ -85,5 +87,5 @@ class ProjectServiceFactory:
   def build(cls):
     database = environ.get('DATABASE_URL')
     db = PgDbAdapter(database)
-    egg_storage = FilesystemEggStorage(Config())
+    egg_storage = S3EggStorage(Config(), boto3.client('s3'))
     return ProjectService(db, egg_storage)

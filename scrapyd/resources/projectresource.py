@@ -55,5 +55,6 @@ class ProjectResource(WsResource):
     return {
       'name': project.name,
       'version': project.version,
+      'path': project.path,
       'createdAt': int(project.created_at.strftime("%s")) * 1000
     }
