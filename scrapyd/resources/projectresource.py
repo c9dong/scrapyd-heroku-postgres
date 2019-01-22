@@ -9,6 +9,7 @@ class ProjectResource(WsResource):
 
   '''
   add a new version of a project
+  -- curl "http://127.0.0.1:6800/projects?name=abc&version=1" -X POST --data-binary @scrapyd/tests/mybot.egg
   '''
   def render_POST(self, txrequest):
     name = txrequest.args[b'name'][0].decode('utf-8')
@@ -22,6 +23,8 @@ class ProjectResource(WsResource):
 
   '''
   remove a project, or a specific version
+  -- curl "http://127.0.0.1:6800/projects?name=abc&version=2" -X DELETE
+  -- curl "http://127.0.0.1:6800/projects?name=abc" -X DELETE
   '''
   def render_DELETE(self, txrequest):
     name = txrequest.args[b'name'][0].decode('utf-8')
@@ -33,6 +36,8 @@ class ProjectResource(WsResource):
 
   '''
   list a project, or a specific version of a project
+  -- curl "http://127.0.0.1:6800/projects?name=abc&version=1"
+  -- curl "http://127.0.0.1:6800/projects?name=abc"
   '''
   def render_GET(self, txrequest):
     name = txrequest.args[b'name'][0].decode('utf-8')
@@ -46,6 +51,7 @@ class ProjectResource(WsResource):
 
   '''
   list the latest version of all projects
+  -- curl "http://127.0.0.1:6800/projects" -X GETALL
   '''
   def render_GETALL(self, txrequest):
     data = self._service.getall()

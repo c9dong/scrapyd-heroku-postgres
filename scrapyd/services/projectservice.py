@@ -67,7 +67,7 @@ class ProjectService:
     return map(lambda r : self.__result_to_model(r), results)
 
   def __result_to_model(self, result):
-    return Project(result[0], result[1], '', result[2], result[3])
+    return Project(result[0], result[1], '', result[2], long(result[3]))
 
   def __get(self, project_key):
     q = "select name, version, path, createdAt from %s where name=%%s" % self._table

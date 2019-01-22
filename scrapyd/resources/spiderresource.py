@@ -9,6 +9,7 @@ class SpiderResource(WsResource):
 
   '''
   get all spiders in a project
+  -- curl "http://127.0.0.1:6800/spiders?name=abc&version=1" -X GETALL
   '''
   def render_GETALL(self, txrequest):
     name = txrequest.args[b'name'][0].decode('utf-8')

@@ -61,11 +61,11 @@ class S3EggStorage(object):
 
   def delete(self, project, version=None):
     if version is None:
-      path = path.join(self._basedir, project)
+      p = path.join(self._basedir, project)
     else:
-      path = self._eggpath(project, version)
+      p = self._eggpath(project, version)
 
-    self._s3_client.delete_object(Bucket=self._bucket_name, Key=path)
+    self._s3_client.delete_object(Bucket=self._bucket_name, Key=p)
 
 
   def _eggpath(self, project, version):

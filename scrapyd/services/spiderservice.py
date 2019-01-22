@@ -1,6 +1,6 @@
 import os
 import sys
-from subprocess import Popen, PIPE
+import subprocess
 import six
 
 from ..models.project import Project
@@ -8,8 +8,9 @@ from ..exceptions.httpexception import HttpException, HTTP_404_NOT_FOUND
 from ..utils import UtilsCache
 
 class SpiderService:
-  def __init__(self, spider_cache):
+  def __init__(self, spider_cache, subprocess_):
     self._cache = spider_cache
+    self._subprocess = subprocess_
 
   def getall(self, project):
     return self.get_spider_list(project.name, runner='scrapyd.runner', version=project.version)
@@ -29,7 +30,7 @@ class SpiderService:
     if version:
       env['SCRAPY_EGG_VERSION'] = version
     pargs = [sys.executable, '-m', runner, 'list']
-    proc = Popen(pargs, stdout=PIPE, stderr=PIPE, env=env)
+    proc = self._subprocess.Popen(pargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
 
     out, err = proc.communicate()
     if proc.returncode:
@@ -50,4 +51,4 @@ class SpiderService:
 class SpiderServiceFactory:
   @classmethod
   def build(cls):
-    return SpiderService(UtilsCache())
+    return SpiderService(UtilsCache(), subprocess)
