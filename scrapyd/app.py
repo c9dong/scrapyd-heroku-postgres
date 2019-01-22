@@ -27,12 +27,12 @@ def application(config):
 
     poller = QueuePoller(config)
     eggstorage = FilesystemEggStorage(config)
-    scheduler = SpiderScheduler(config)
+    # scheduler = SpiderScheduler(config)
     environment = Environment(config)
 
     app.setComponent(IPoller, poller)
     app.setComponent(IEggStorage, eggstorage)
-    app.setComponent(ISpiderScheduler, scheduler)
+    # app.setComponent(ISpiderScheduler, scheduler)
     app.setComponent(IEnvironment, environment)
 
     laupath = config.get('launcher', 'scrapyd.launcher.Launcher')

@@ -12,7 +12,6 @@ class ProjectService:
     self._db = db
     self._egg_storage = egg_storage
     self._table = 'projects'
-    self._project_dir = '_projects'
 
     q = "create table if not exists %s " \
       "(name text, " \
@@ -67,7 +66,7 @@ class ProjectService:
     return map(lambda r : self.__result_to_model(r), results)
 
   def __result_to_model(self, result):
-    return Project(result[0], result[1], '', result[2], long(result[3]))
+    return Project(result[0], result[1], '', result[2], result[3])
 
   def __get(self, project_key):
     q = "select name, version, path, createdAt from %s where name=%%s" % self._table
@@ -83,9 +82,13 @@ class ProjectService:
     
 
 class ProjectServiceFactory:
+  obj = None
+
   @classmethod
   def build(cls):
-    database = environ.get('DATABASE_URL')
-    db = PgDbAdapter(database)
-    egg_storage = S3EggStorage(Config(), boto3.client('s3'))
-    return ProjectService(db, egg_storage)
+    if cls.obj is None:
+      database = environ.get('DATABASE_URL')
+      db = PgDbAdapter(database)
+      egg_storage = S3EggStorage(Config(), boto3.client('s3'))
+      cls.obj = ProjectService(db, egg_storage)
+    return cls.obj

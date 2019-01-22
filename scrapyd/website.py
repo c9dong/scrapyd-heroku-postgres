@@ -40,8 +40,9 @@ class Root(resource.Resource):
         self.update_projects()
 
     def update_projects(self):
-        self.poller.update_projects()
-        self.scheduler.update_projects()
+        pass
+        # self.poller.update_projects()
+        # self.scheduler.update_projects()
 
     @property
     def launcher(self):

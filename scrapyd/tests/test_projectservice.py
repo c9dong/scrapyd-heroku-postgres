@@ -1,6 +1,7 @@
 from twisted.trial import unittest
 from mock import MagicMock
 from mock import call
+import datetime
 
 from zope.interface.verify import verifyObject
 
@@ -17,7 +18,7 @@ class ProjectServiceTest(unittest.TestCase):
 
   def test_get(self):
     name = 'name'
-    mock_data = [(name, '1', '/name/1', 1234), (name, '2', '/name/2', 1235)]
+    mock_data = [(name, '1', '/name/1', datetime.datetime(2000, 1, 1)), (name, '2', '/name/2', datetime.datetime(2000, 1, 2))]
     self.db.execute = MagicMock(return_value=mock_data)
     data = self.service.get(name)
 
@@ -31,7 +32,7 @@ class ProjectServiceTest(unittest.TestCase):
   def test_get_version(self):
     name = 'name'
     version = '1'
-    mock_data = [(name, version, '/name/1', 1234)]
+    mock_data = [(name, version, '/name/1', datetime.datetime(2000, 1, 1))]
     self.db.execute = MagicMock(return_value=mock_data)
     data = self.service.get(name, version)
 
@@ -42,7 +43,7 @@ class ProjectServiceTest(unittest.TestCase):
     self.__assert_project(data[0], mock_data[0])
 
   def test_getall(self):
-    mock_data = [('a', '1', '/a/1', 1234), ('b', '1', '/b/1', 1235)]
+    mock_data = [('a', '1', '/a/1', datetime.datetime(2000, 1, 1)), ('b', '1', '/b/1', datetime.datetime(2000, 1, 2))]
     self.db.execute = MagicMock(return_value=mock_data)
     data = self.service.getall()
 
@@ -54,7 +55,7 @@ class ProjectServiceTest(unittest.TestCase):
     self.__assert_project(data[1], mock_data[1])
 
   def test_post(self):
-    post_project = Project('a', '1', 'data', 'path', 1234)
+    post_project = Project('a', '1', 'data', 'path', datetime.datetime(2000, 1, 1))
     self.egg_store.put = MagicMock(return_value='path')
     self.db.execute = MagicMock()
     self.db.execute.side_effect = [[], None]
@@ -67,7 +68,7 @@ class ProjectServiceTest(unittest.TestCase):
     self.egg_store.put.assert_called_with('data', 'a', '1')
 
   def test_post_exist(self):
-    post_project = Project('a', '1', 'data', 'path', 1234)
+    post_project = Project('a', '1', 'data', 'path', datetime.datetime(2000, 1, 1))
     self.egg_store.put = MagicMock(return_value='path')
     self.db.execute = MagicMock()
     self.db.execute.side_effect = [[Project('a', '1')], None]

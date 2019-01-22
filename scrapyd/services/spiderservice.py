@@ -49,6 +49,10 @@ class SpiderService:
     return tmp
 
 class SpiderServiceFactory:
+  obj = None
+
   @classmethod
   def build(cls):
-    return SpiderService(UtilsCache(), subprocess)
+    if cls.obj is None:
+      cls.obj = SpiderService(UtilsCache(), subprocess)
+    return cls.obj
